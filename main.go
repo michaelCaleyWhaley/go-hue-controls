@@ -1,10 +1,10 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	hueRequest "go-hue-controls/hue-request"
 	"go-hue-controls/initialise"
+	marshalData "go-hue-controls/marshal-data"
 	"net/http"
 	"os"
 
@@ -16,25 +16,16 @@ func init() {
 }
 
 func rootHandler(c *gin.Context) {
-
-	data := map[string]interface{}{
-		"on": false,
-	}
-
-	jsonData, err := json.Marshal(data)
-	if err != nil {
-		fmt.Println("Error marshaling JSON:", err)
-		return
-	}
-
 	hueIpAddress := os.Getenv("HUE_IP_ADDRESS")
 	hueUsername := os.Getenv("HUE_USERNAME")
-
-	hueApiUrl := fmt.Sprintf("http://%s/api/%s/lights/2/state", hueIpAddress, hueUsername)
 
 	// lights to be toggled
 	// 1,2,3,4
 
+	jsonData := marshalData.Json(map[string]interface{}{
+		"on": false,
+	})
+	hueApiUrl := fmt.Sprintf("http://%s/api/%s/lights/2/state", hueIpAddress, hueUsername)
 	resLightTwo := hueRequest.Request(http.MethodPut, hueApiUrl+"/lights/2/state", jsonData)
 
 	if resLightTwo == nil {
