@@ -7,10 +7,6 @@ import (
 	"net/http"
 )
 
-func RequestGet(endpoint string) []byte {
-	return Request(http.MethodGet, endpoint, nil)
-}
-
 func Request(method string, endpoint string, marshalledData []byte) []byte {
 	request, newReqerr := http.NewRequest(method, endpoint, bytes.NewBuffer(marshalledData))
 	request.Header.Set("Content-Type", "application/json")
