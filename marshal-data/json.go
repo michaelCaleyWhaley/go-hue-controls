@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func Json(data map[string]interface{}) []byte {
+func MarshalJson(data map[string]interface{}) []byte {
 	jsonData, err := json.Marshal(data)
 	if err != nil {
 		fmt.Println("Error marshaling JSON:", err)
@@ -13,4 +13,8 @@ func Json(data map[string]interface{}) []byte {
 	}
 
 	return jsonData
+}
+
+func UnmarshalJson(data []byte, parsedJson any) {
+	json.Unmarshal(data, &parsedJson)
 }

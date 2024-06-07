@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	hueRequest "go-hue-controls/hue-request"
+	"go-hue-controls/httpRequestClient"
+	hueHelpers "go-hue-controls/hue"
 	"go-hue-controls/initialise"
 	marshalData "go-hue-controls/marshal-data"
 	"net/http"
@@ -18,17 +19,18 @@ func init() {
 func rootHandler(c *gin.Context) {
 	hueIpAddress := os.Getenv("HUE_IP_ADDRESS")
 	hueUsername := os.Getenv("HUE_USERNAME")
+	lightNo := c.Param("number")
 
-	// lights to be toggled
-	// 1,2,3,4
+	lightStatus := hueHelpers.RequestHueState(lightNo)
 
-	jsonData := marshalData.Json(map[string]interface{}{
-		"on": false,
+	jsonData := marshalData.MarshalJson(map[string]interface{}{
+		"on": !lightStatus.State.On,
 	})
-	hueApiUrl := fmt.Sprintf("http://%s/api/%s/lights/2/state", hueIpAddress, hueUsername)
-	resLightTwo := hueRequest.Request(http.MethodPut, hueApiUrl+"/lights/2/state", jsonData)
+	hueApiUrl := fmt.Sprintf("http://%s/api/%s/lights/%s/state", hueIpAddress, hueUsername, lightNo)
 
-	if resLightTwo == nil {
+	resLight := httpRequestClient.Request(http.MethodPut, hueApiUrl, jsonData)
+
+	if resLight == nil {
 		fmt.Println("Failed to turn on light")
 	}
 
@@ -40,6 +42,6 @@ func rootHandler(c *gin.Context) {
 
 func main() {
 	r := gin.Default()
-	r.GET("/", rootHandler)
+	r.GET("/light/:number", rootHandler)
 	r.Run()
 }

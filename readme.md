@@ -15,3 +15,11 @@ Getting started: https://developers.meethue.com/develop/get-started-2
 # Note
 
 {"devicetype":"my_hue_app#mac-michael"}
+
+# How to use
+
+Send a get request to host url with path `/light` and light no.
+
+Full example: `localhost:3000/light/5`
+
+Each request to this endpoint will toggle the light between active states.
