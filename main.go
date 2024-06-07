@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"go-hue-controls/httpRequestClient"
-	hueHelpers "go-hue-controls/hue"
+	hueHelpers "go-hue-controls/hueHelpers"
 	"go-hue-controls/initialise"
 	marshalData "go-hue-controls/marshal-data"
 	"net/http"
